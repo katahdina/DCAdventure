@@ -1,0 +1,320 @@
+<!-- A Versatile Layout for Full-screen Maps by Andy Cochran
+Andy Cochran 
+From https://medium.com/nyc-planning-digital/a-versatile-layout-for-full-screen-maps-229cec508b22 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>DC by Foot</title>
+
+    
+    <!-- JavaScript Libraries-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.js"></script>
+
+  
+    <!-- CSS Links -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css" rel="stylesheet" />
+    <link href="layover_styles.css" rel="stylesheet" />
+    
+    
+</head>
+
+<body>
+
+    <div class="site-header" style="text-align: center;">
+        <strong class="site-title">Making The Most of a Layover</strong>
+        <p class="site-subtitle">By Arthur Katahdin</p>
+    </div>
+
+    <div class="site-main grid-x has-content-open">
+
+    
+        
+        <div class="map-container cell medium-6 large-6 large-order-2">
+             <!--  ADD iframe here, inside the versitle layout's map container (VI.2.)   -->
+             <iframe src="layover_settings.html" title="Map"></iframe> 
+
+        </div>
+
+        <!-- Sidebar panel -->
+        <div class="sidebar cell medium-3 large-3 large-order-1 show-for-medium">
+            <div class="sidebar-inner">
+              <div style="padding: 0.5rem 1rem 1rem 1rem;">
+                <a class="content-link" href="#" data-location="about" style="font-weight: bold; font-size: 1.5rem; display: block; text-align: center; text-decoration: underline; padding: 0.5rem 0;">About the Journey</a>
+              </div>
+              <hr />
+              <h5 style="margin-top: 1rem;">Key Locations</h5>
+              <ul>
+                  <li><a class="content-link" href="#" data-location="dca">DCA Airport</a></li>
+                  <li><a class="content-link" href="#" data-location="jefferson">Jefferson Memorial</a></li>
+                  <li><a class="content-link" href="#" data-location="capitol">US Capitol</a></li>
+                  <li><a class="content-link" href="#" data-location="whitehouse">Whitehouse</a></li>
+                  <li><a class="content-link" href="#" data-location="washmon">Washington Monument</a></li>
+                  <li><a class="content-link" href="#" data-location="lincoln">Lincoln Memorial</a></li>
+              </ul>
+          
+              <hr />
+              <div style="padding-left: 0rem; padding-right: 0rem;">
+                <p><a href="#" id="animate-footprints" class="content-link" style="display: inline-block; width: 100%;">Show Walking Route</a></p>
+                <p><a href="#" id="hide-footprints" class="content-link" style="display: inline-block; width: 100%;">Hide Walking Route</a></p>
+                <p><a class="content-link" href="#" data-location="citations">Citations</a></p>
+                
+                <h5 style="margin: 1rem 0 0.5rem 0; border-top: 1px solid #ccc; padding-top: 0.5rem;">Full Video</h5>
+                <div class="video-responsive">
+                    <iframe
+                        id="yt-player"
+                        src="https://www.youtube.com/embed/X4zbDWdX-L4?enablejsapi=1"
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+            </div>
+          </div>
+
+        
+        <!--  Content panel  -->
+        <div class="content cell medium-3 large-3 large-order-3">
+            <div class="content-inner">
+                <h2></h2>
+                <div class="content-body"></div>
+            </div>
+
+    </div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        let player;
+      
+        function onYouTubeIframeAPIReady() {
+          player = new YT.Player('yt-player', {
+            events: {
+              'onReady': (event) => {
+                // Now we can listen for messages
+                window.addEventListener('message', (event) => {
+                  const { type, time } = event.data || {};
+                  if (type === 'seek-video' && typeof time === 'number' && player) {
+                    const currentState = player.getPlayerState(); // Save current state
+                    const wasPlaying = currentState === YT.PlayerState.PLAYING || currentState === YT.PlayerState.BUFFERING;
+
+                    player.seekTo(time, true);
+
+                    if (wasPlaying) {
+                        player.playVideo();
+                    } else {
+                        player.pauseVideo(); // Explicitly stay paused
+                    }
+                    }
+                });
+              }
+            }
+          });
+        }
+        
+      </script>
+      <script>
+        function seekTo(seconds) {
+          window.parent.postMessage({ type: 'seek-video', time: seconds }, '*');
+        }
+      </script>
+    <script>
+        $(document).ready(function () {
+            const contentMap = {
+                about: {
+                    title: "About the Journey",
+                    text: `<p><strong> What is this map all about?</strong></p>
+                            <p> For some backstory, my grandmother passed away on January 17th, 2025. Her funeral was then scheduled for a time that all of my dads side family could attend which happened to be March 29th, 2025. Since I usually wait until the last minute to do things,
+                                including making this map, The cheapest flight to attend her funeral gave me an 7.5 hour layover overnight in the Ronald Reagan National Airport (DCA) from approximately 1am to 8:30am. </p>
+                            <p>Instead of trying and most likely failing to get sleep in the airport, I conconcted a plan to go sight see some of the famous land marks around the DC area. All of my travel would be on foot, and based on my gps tracking that I did with Strava,
+                                I walked a total of 12.08 miles between the hours of 1-5:30am, and yes I made it back to the airport in time to make my fligt to my grandma's funeral. I take pride in my ability to take on challenges and push myslef mentally and physically. I really enjoyed this little adventure I had, and loved the resulting video I made from it. I hope to continue to do things like this in the future. </p>  
+                             <div class="location-image">
+                                <img src="pics/wash_selfie.jpg" alt="a tired selfie in front of the washington monument" />
+                            </div>   
+                                `
+                                },
+                dca: {
+                    title: "DCA Airport",
+                    text: `<p><strong> Mileage: 12.08 (at finish)</strong></p>
+                            <p><strong> Arrival Time: 12:51am</strong></p>
+                            <p> <a href="#" onclick="seekTo(50)">DCA </a> served as my home base for this adventure since it was where I was flying in and out of. I made it back to DCA around 4:48am and then had time to wait before my flight laft at 8:20am. Fun fact,
+                                DCA is technically in Virginia, and not in the District of Columbia boundary.</p>
+                            <div class="location-image">
+                                <img src="pics/DCA.jpg" alt="view from a plane window landing in DCA airport at night" />
+                            </div>
+                            `
+                },
+                jefferson: {
+                    title: "Jefferson Memorial",
+                    text: `
+                            <p><strong> Mileage: 3.6</strong></p>
+                            <p><strong> Arrival Time: 1:43am</strong></p>
+                            <p> The <a href="#" onclick="seekTo(221)">Jefferson Memorial </a> served as my first landmark location and really cemented the fact for me that I was indeed sightseeing at 2am in a city I had onlly visited once as a toddler. The Jefferson memorial was also the point where my feet started to blister because I made the mistake of only bringing one pair of shoes on this trip and they were new. All of the subsequent miles would be walked <a href="#" onclick="seekTo(258)">barefoot</a>.</p>
+                            <div class="location-image">
+                                <img src="pics/jefferson.jpg" alt="Jefferson memorial at night"/>
+                            </div>
+                            <div class="location-image">
+                                <img src="pics/jefferson_selfie.jpg" alt="smiling selfie taken in front of the Jefferson memorial" />
+                            </div>
+                            `
+                },
+                capitol: {
+                    title: "US Capitol",
+                    text: `<p><strong> Mileage: 5.46</strong></p>
+                            <p><strong> Arrival Time: 2:17am</strong></p>
+                            <p> This was my second stop on my journey. Technically I didn't go up to the <a href="#" onclick="seekTo(360)">US Capitol </a> building itself because that would have added more mileage than I was comfortbale doing. Instead I opted to view it from across the reflecting pond in front of it. On my way to the Capitol I was able to see the outside of the Air and Space Museum which I have vague memories of going in as a kid.</p>
+                            <div class="location-image">
+                                <img src="pics/capitol.jpg" alt="US capitol building" />
+                            </div>
+                            <div class="location-image">
+                                <img src="pics/capitol_selfie.jpg" alt="selfie in front of US capitol building" />
+                            </div>
+                            `
+                },
+                whitehouse: {
+                    title: "White House",
+                    text: `<p><strong> Mileage: 6.81</strong></p>
+                        <p><strong> Arrival Time: 2:46am</strong></p>
+                        <p>This was stop number three on my route. Just like the Capitol I didn't really get too close to it, although this time it was because of all the security around it. If you watch the YouTube video, I mistakenly call it the 
+                        <a href="#" onclick="seekTo(472)">"Light House" </a> because of how tired I am.</p>
+                        <div class="location-image">
+                                <img src="pics/lighthouse.jpg" alt="Selfie in front of the White House" />
+                            </div>
+                        `
+                },
+                washmon: {
+                    title: "Washington Monument",
+                    text: `<p><strong> Mileage: 7.24</strong></p>
+                            <p><strong> Arrival Time: 3:01am</strong></p>
+                            <p> This was the second to last stop on my journey and I was definitely feeling how long my walk had been. It was fun to actually go up and <a href="#" onclick="seekTo(527)">touch </a> the monument after having seen it in the distance for so long. The pictures that I got of it at night were also very stunning and probably my favorite pictures from the whole trip.</p>
+                            <div class="location-image">
+                                <img src="pics/wash.jpg" alt="a dentered shot of washington monument with light scutting throught the dark sky" />
+                            </div>
+                            `
+                },
+                lincoln: {
+                    title: "Lincoln Memorial",
+                    text: `<p><strong> Mileage: 8.11</strong></p>
+                            <p><strong> Arrival Time: 3:22am</strong></p>
+                            <p> At this point I was quite tired, as is apparent in my quieter tone. The novelty of the craziness of what I was doing had run it's course and I was just running on <a href="#" onclick="seekTo(639)">fumes</a>. The view of the Washington monument from inside the Lincoln Memorial was breathtaking and wealth worth the time and energy I had put into this journey.</p>
+                            <div class="location-image">
+                                <img src="pics/lincoln.jpg" alt="Lincoln Memorial statue" />
+                            </div>
+                            <div class="location-image">
+                                <img src="pics/lincoln_steps.jpg" alt="Washington Monument viewed from inside Lincoln Memorial" />
+                            </div>
+                            `
+                },
+                citations: {
+                    title: "Citations",
+                    text: `<p><strong>1.</strong> The original layout design was adapted from work by Andy Cochran<br>
+                                <a href="https://medium.com/nyc-planning-digital/a-versatile-layout-for-full-screen-maps-229cec508b22" target="_blank">https://medium.com/nyc-planning-digital/a-versatile-layout-for-full-screen-maps-229cec508b22</a>
+                                </p>
+                            <p><strong>2.</strong> The base map used for this project as well the API comes from mapbox<br>
+                                <a href="https://www.mapbox.com/mapbox-gljs" target="_blank">https://www.mapbox.com/mapbox-gljs</a>
+                                </p>
+                            <p><strong>3.</strong> The GPS data was logged by me, Arthur Katahdin, using strava<br>
+                                <a href="https://www.strava.com/" target="_blank">https://www.strava.com/</a>
+                                </p>
+                            <p><strong>4.</strong> All pictures and video featured in this map were captured by Arthur Katahdin (me)<br>
+                                <a href="https://www.youtube.com/@arthurkatahdin" target="_blank">https://www.youtube.com/@arthurkatahdin/</a>
+                                </p>
+                    `
+                },
+                video: {
+                    title: "Full Journey Video",
+                    text: `
+                        <div class="video-responsive">
+                            <iframe src="https://www.youtube.com/embed/X4zbDWdX-L4?si=86aR8J7m2-AMzMSH"
+                                title="YouTube video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        </div>`
+                },
+                route: {
+                    title: "Walking Route",
+                    text: `<p>I was able to extract this route from the strava GPS route that I recorded, and with the help of a python script and geojson.io import the coordinates into this interactive map.</p>
+                           <p> As you might be able to tell from the segment that takes me out to the Jefferson memorial, I didn't completely follow the best walking path. My goal was to try and see all of the locations I wanted to see while covering the shortest distance that I could. I also didn't have a preset route in mind, other than the order of locations and this meant that I ended up jumping a few fences and crossing a highway using a railroad bridge. To me, that was all just part of the adventure.</p>  
+                            <div class="location-image">
+                                <img src="pics/strava.png" alt="map of the route taken as seen on strava's website" />
+                            </div>
+                            `
+                },
+                
+
+            };
+
+            // Show About panel by default on load
+            const defaultContent = contentMap["about"];
+            if (defaultContent) {
+                $('.content h2').text(defaultContent.title);
+                $('.content-body').html(defaultContent.text);
+                $('.content').show();
+                $('.site-main').addClass('has-content-open');
+                window.dispatchEvent(new Event('resize'));
+            }
+
+            // Listen for marker clicks from the iframe
+window.addEventListener('message', function (event) {
+    if (event.data && event.data.type === 'marker-click') {
+        const loc = event.data.id;
+        const content = contentMap[loc];
+
+        if (content) {
+            $('.content h2').text(content.title);
+            $('.content-body').html(content.text);
+            $('.content').show();
+            $('.site-main').addClass('has-content-open');
+            window.dispatchEvent(new Event('resize'));
+        }
+    }
+});
+    
+$('.content-link').click(function () {
+    const loc = $(this).data('location');
+    const content = contentMap[loc];
+
+    if (content) {
+        $('.content h2').text(content.title);
+        $('.content-body').html(content.text);
+        $('.content').show();
+        $('.site-main').addClass('has-content-open');
+        window.dispatchEvent(new Event('resize'));
+
+        const iframe = document.querySelector("iframe");
+        if (["jefferson", "capitol", "whitehouse", "washmon", "lincoln", "dca"].includes(loc)) {
+            iframe.contentWindow.postMessage({ type: "fly-to", id: loc }, "*");
+        } else {
+            iframe.contentWindow.postMessage({ type: "reset-view" }, "*");
+        }
+    }
+});
+
+        $('#animate-footprints').click(function () {
+            const iframe = document.querySelector("iframe");
+            iframe.contentWindow.postMessage({ type: "start-animation" }, "*");
+
+            // Also open the walking route content panel
+            const content = contentMap["route"];
+            if (content) {
+                $('.content h2').text(content.title);
+                $('.content-body').html(content.text);
+                $('.content').show();
+                $('.site-main').addClass('has-content-open');
+                window.dispatchEvent(new Event('resize'));
+            }
+        });
+
+        $('#hide-footprints').click(function () {
+            const iframe = document.querySelector("iframe");
+            iframe.contentWindow.postMessage({ type: "hide-animation" }, "*");
+        });
+
+});
+    </script>
+
+</body>
+
+</html>
